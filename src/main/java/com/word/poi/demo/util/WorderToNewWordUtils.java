@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * 通过word模板生成新的word工具类
  * 
  */
-public class WorderToNewWordUtil {
+public class WorderToNewWordUtils {
 
     /**
      * 根据模板生成新word文档
@@ -25,7 +25,7 @@ public class WorderToNewWordUtil {
      * @param textMap 需要替换的信息集合
      * @return 成功返回true,失败返回false
      */
-    public static XWPFDocument changWordForCity(InputStream in,Map<String, String> textMap) {
+    public static XWPFDocument changWordForcommon(InputStream in,Map<String, String> textMap) {
         XWPFDocument document = null;
         try {
             //第一步：获取docx解析对象
@@ -50,7 +50,7 @@ public class WorderToNewWordUtil {
      * @param colorMapForCell
      * @return 成功返回true,失败返回false
      */
-    public static XWPFDocument changWordForProvince(
+    public static XWPFDocument changWordForComplex(
             InputStream in,
             Map<String, String> textMap, 
             Map<String, List<List<String>>> extendTableMap,

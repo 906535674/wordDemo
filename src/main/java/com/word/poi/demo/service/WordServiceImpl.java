@@ -1,9 +1,9 @@
 package com.word.poi.demo.service;
 
 import com.word.poi.demo.mapper.SimulatedDb;
-import com.word.poi.demo.pojo.PerformanceBriefInfo;
+import com.word.poi.demo.pojo.DataDemo;
 import com.word.poi.demo.util.BriefHandler;
-import com.word.poi.demo.util.WorderToNewWordUtil;
+import com.word.poi.demo.util.WorderToNewWordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.*;
 @Service
 public class WordServiceImpl implements WordService {
     //顺序不能动，与word列表的行数对应
-    String[] citys = {"全球","美国","俄罗斯","中国","英国","德国","法国","一组","韩国","日本","朝鲜","印度",
+    String[] states = {"全球","美国","俄罗斯","中国","英国","德国","法国","一组","韩国","日本","朝鲜","印度",
             "迪拜","二组","菲律宾","澳大利亚","加拿大","尼泊尔","三组","意大利","葡萄牙","比利时","南非","巴基斯坦","蒙古","四组"};
     String [] percents = {"C8","C9","C14","C15","C18","C19","C22","C23","C239","C25","C26","C244","C28","C29","C333","C336","C337",
             "C30C30S(a-b)/b","C31C31S(a-b)/b","C35","C33","C191C191S(a-b)/b","C192C192S(a-b)/b",
@@ -91,16 +91,16 @@ public class WordServiceImpl implements WordService {
     String[] columnFortable17 ={"C173","C174","C341","C342%","C175%","C176","C177%","C178","C179%","C180","C181%","C182","C183","C343","C344%","C184%","C185","C186%","C187","C188%","C189","C190%"};
 
     @Override
-    public void exportWord(InputStream in,OutputStream out, String city) {
+    public void exportWord(InputStream in,OutputStream out, String state) {
         try {
             SimulatedDb simulatedDb = new SimulatedDb();
             //本周
-            List<PerformanceBriefInfo> thisFDDBriefs = simulatedDb.getSimulatedDb();
+            List<DataDemo> thisFDDBriefs = simulatedDb.getSimulatedDb();
             Map<String, Map<String, String>> dataMap = convertCityResulMap(thisFDDBriefs, "C", "");
-            Map<String, String> thisFDDBriefsMap = convertCityResulMap(thisFDDBriefs,"C","").get(city);
+            Map<String, String> thisFDDBriefsMap = convertCityResulMap(thisFDDBriefs,"C","").get(state);
             //上周
-            List<PerformanceBriefInfo> lastFDDBriefs = simulatedDb.getSimulatedDb();
-            Map<String, String> lastFDDBriefsMap = convertCityResulMap(lastFDDBriefs,"C","S").get(city);
+            List<DataDemo> lastFDDBriefs = simulatedDb.getSimulatedDb();
+            Map<String, String> lastFDDBriefsMap = convertCityResulMap(lastFDDBriefs,"C","S").get(state);
             //合并上周本周数据
             Map<String, String> idMap = new HashMap<>();
             idMap.putAll(thisFDDBriefsMap);
@@ -113,7 +113,7 @@ public class WordServiceImpl implements WordService {
             Map<String, List<List<String>>> extendTableMap = extendTableDataForProvince(dataMap);
             //根据业务逻辑添加表格颜色
             Map<String, List<String>>  colorMapForCell = setColorForCell(dataMap,extendCidMap);
-            XWPFDocument docx = WorderToNewWordUtil.changWordForProvince(in, extendCidMap, extendTableMap,colorMapForCell);
+            XWPFDocument docx = WorderToNewWordUtils.changWordForComplex(in, extendCidMap, extendTableMap,colorMapForCell);
             docx.write(out);
         } catch (Exception e) {
             e.printStackTrace();
@@ -275,49 +275,49 @@ public class WordServiceImpl implements WordService {
      */
     private Map<String,String> extendCityOrderData(Map<String, String> extendCidMap, Map<String, Map<String, String>> dataMap) {
         //获取最高的三个数据加百分号
-        String[] cityOrderTop3percents ={"C8","C14","C147","C156","C165","C175","C184","C325","C328","C281"};
+        String[] stateOrderTop3percents ={"C8","C14","C147","C156","C165","C175","C184","C325","C328","C281"};
         //获取最低的三个数据加百分号
-        String[] cityOrderBottom3percents ={"C14"};
+        String[] stateOrderBottom3percents ={"C14"};
         //获取最低的三个数据加百分号并拼接上周的数据 用“（”隔开
-        String[] cityOrderBottom3percentsAndLastWeek ={"C25(C26","C28(C29","C336(C337"};
+        String[] stateOrderBottom3percentsAndLastWeek ={"C25(C26","C28(C29","C336(C337"};
 
         //获取最高的三个数据
-        String[] cityOrderTop3 ={};
+        String[] stateOrderTop3 ={};
         //获取最低的三个数据
-        String[] cityOrderBottom3 ={"C40","C72"};
+        String[] stateOrderBottom3 ={"C40","C72"};
 
         //统计为0 的数据
-        String[] cityDataIsZero ={"C20"};
+        String[] stateDataIsZero ={"C20"};
 
         //统计 优化劣化（数据最大的）的数据  FDD1800差小区占比环比上周，FDD900差小区占比环比上周
-        String[] cityDataOrderMax ={"C175(a-b)/bC175S","C184(a-b)/bC184S"};//${C175(a-b)/bC175SMax}   ${C184(a-b)/bC184SMax}
+        String[] stateDataOrderMax ={"C175(a-b)/bC175S","C184(a-b)/bC184S"};//${C175(a-b)/bC175SMax}   ${C184(a-b)/bC184SMax}
 
-        for (String cNo:cityOrderTop3percents) {
+        for (String cNo:stateOrderTop3percents) {
             String top3Str = getTop3FromMapByCNo(dataMap,cNo,"%");
             extendCidMap.put(cNo+"Top3",top3Str);
         }
-        for (String cNo:cityOrderBottom3percents) {
+        for (String cNo:stateOrderBottom3percents) {
             String bottom3Str = getBottom3FromMapByCNo(dataMap,cNo,"%");
             extendCidMap.put(cNo+"Bottom3",bottom3Str);
         }
-        for (String cNo:cityOrderTop3) {
+        for (String cNo:stateOrderTop3) {
             String top3Str = getTop3FromMapByCNo(dataMap,cNo,"");
             extendCidMap.put(cNo+"Top3",top3Str);
         }
-        for (String cNo:cityOrderBottom3) {
+        for (String cNo:stateOrderBottom3) {
             String bottom3Str = getBottom3FromMapByCNo(dataMap,cNo,"");
             extendCidMap.put(cNo+"Bottom3",bottom3Str);
         }
-        for (String cNo:cityDataIsZero) {
-            String cityZeroStr = getCityIsZeroFromMapByCNo(dataMap,cNo);
-            extendCidMap.put(cNo+"Zero",cityZeroStr);
+        for (String cNo:stateDataIsZero) {
+            String stateZeroStr = getCityIsZeroFromMapByCNo(dataMap,cNo);
+            extendCidMap.put(cNo+"Zero",stateZeroStr);
         }
 
-        for (String cNo:cityOrderBottom3percentsAndLastWeek) {
+        for (String cNo:stateOrderBottom3percentsAndLastWeek) {
             String bottom3Str = getCityOrderBottom3percentsAndLastWeek(dataMap,cNo,"%");
             extendCidMap.put(cNo+"Bottom3",bottom3Str);
         }
-        for (String cNo:cityDataOrderMax) {
+        for (String cNo:stateDataOrderMax) {
             String bottom3Str = getCityOrderMax(dataMap,cNo,"%");
             extendCidMap.put(cNo+"Max",bottom3Str);
         }
@@ -394,16 +394,16 @@ public class WordServiceImpl implements WordService {
 
     private String getCityIsZeroFromMapByCNo(Map<String, Map<String, String>> dataMap, String cNo) {
         Map<String, Double> top3 = getCityMapDataBycNo(dataMap, cNo);
-        StringBuilder cityDataIsZero = new StringBuilder();
+        StringBuilder stateDataIsZero = new StringBuilder();
 
         for (Map.Entry<String, Double> entry : top3.entrySet()) {
             if (entry.getValue()==0)
-                cityDataIsZero.append(entry.getKey()+"、");
+                stateDataIsZero.append(entry.getKey()+"、");
         }
-        if (cityDataIsZero.length()>0){
-            return cityDataIsZero.toString().substring(0,cityDataIsZero.toString().length()-1);
+        if (stateDataIsZero.length()>0){
+            return stateDataIsZero.toString().substring(0,stateDataIsZero.toString().length()-1);
         }
-        return cityDataIsZero.toString();
+        return stateDataIsZero.toString();
     }
 
     /**
@@ -437,32 +437,32 @@ public class WordServiceImpl implements WordService {
         String[] onlyCitys = {"美国","俄罗斯","中国","英国","德国","法国","韩国","日本","朝鲜","印度",
                 "迪拜","菲律宾","澳大利亚","加拿大","尼泊尔","意大利","葡萄牙","比利时","南非","巴基斯坦","蒙古"};
         Map<String, Double> map = new HashMap<>();
-        for (String city:onlyCitys) {
-            Map<String, String> cityMap = dataMap.get(city);
+        for (String state:onlyCitys) {
+            Map<String, String> stateMap = dataMap.get(state);
             String cNoValueStr;
             if (cNo.contains("/")){
                 String[] split = cNo.split("/");
-                String cellStr1 = cityMap.get(split[0]);
-                String cellStr2 = cityMap.get(split[1]);
+                String cellStr1 = stateMap.get(split[0]);
+                String cellStr2 = stateMap.get(split[1]);
                 cNoValueStr = compute(cellStr1, cellStr2, "a/b");
             }else if(cNo.contains("+")){
                 String[] split = cNo.split("\\+");
-                String cellStr1 = cityMap.get(split[0]);
-                String cellStr2 = cityMap.get(split[1]);
+                String cellStr1 = stateMap.get(split[0]);
+                String cellStr2 = stateMap.get(split[1]);
                 cNoValueStr = compute(cellStr1, cellStr2, "a+b");
             }else if(cNo.contains("\\")){
                 String[] split = cNo.split("\\\\");
-                String cellStr1 = cityMap.get(split[0]);
-                String cellStr2 = cityMap.get(split[1]);
+                String cellStr1 = stateMap.get(split[0]);
+                String cellStr2 = stateMap.get(split[1]);
                 cNoValueStr = compute(cellStr1, cellStr2, "a/b");
             } else {
-                cNoValueStr = cityMap.get(cNo);
+                cNoValueStr = stateMap.get(cNo);
             }
             if (StringUtils.isEmpty(cNoValueStr)||"NULL".equals(cNoValueStr)){
                 cNoValueStr = "0";
             }
             Double dub =  Double.parseDouble(cNoValueStr);
-            map.put(city,dub);
+            map.put(state,dub);
         }
         return map;
     }
@@ -479,14 +479,14 @@ public class WordServiceImpl implements WordService {
         String[] onlyCitys = {"美国","俄罗斯","中国","英国","德国","法国","韩国","日本","朝鲜","印度",
                 "迪拜","菲律宾","澳大利亚","加拿大","尼泊尔","意大利","葡萄牙","比利时","南非","巴基斯坦","蒙古"};
         Map<String, Double> map = new HashMap<>();
-        for (String city:onlyCitys) {
-            Map<String, String> cityMap = dataMap.get(city);
-            String compute = compute(cityMap.get(cb), cityMap.get(csb), flag);
+        for (String state:onlyCitys) {
+            Map<String, String> stateMap = dataMap.get(state);
+            String compute = compute(stateMap.get(cb), stateMap.get(csb), flag);
             if (StringUtils.isEmpty(compute)||"NULL".equals(compute)){
                 compute = "0";
             }
             Double dub =  Double.parseDouble(compute);
-            map.put(city,dub);
+            map.put(state,dub);
         }
         return map;
     }
@@ -791,15 +791,15 @@ public class WordServiceImpl implements WordService {
     private List<List<String>> getTableByCid(String[] columnFortableNo, Map<String, Map<String, String>> dataMap) {
         List<List<String>> tableList = new ArrayList<>();
         DecimalFormat df = new DecimalFormat("0.00%");
-        for (String city:citys) {
-            Map<String, String> cityMap = dataMap.get(city);
+        for (String state:states) {
+            Map<String, String> stateMap = dataMap.get(state);
             List<String> rowList = new ArrayList<>();
-            rowList.add(city);//添加全球
+            rowList.add(state);//添加全球
             for (String cid:columnFortableNo) {
                 if (cid.contains("+")){
                     String[] split = cid.split("\\+");
-                    String cellStr1 = cityMap.get(split[0]);
-                    String cellStr2 = cityMap.get(split[1]);
+                    String cellStr1 = stateMap.get(split[0]);
+                    String cellStr2 = stateMap.get(split[1]);
                     //int cell1 = Integer.parseInt(StringUtils.isEmpty(cellStr1) == true ? "0" : cellStr1);
                     // int cell2 = Integer.parseInt(StringUtils.isEmpty(cellStr2) == true ? "0" : cellStr2);
                     String cell = compute(cellStr1, cellStr2, "a+b");
@@ -807,8 +807,8 @@ public class WordServiceImpl implements WordService {
                     rowList.add(cell);
                 }else if (cid.contains("/")){
                     String[] split = cid.split("/");
-                    String cellStr1 = cityMap.get(split[0]);
-                    String cellStr2 = cityMap.get(split[1]);
+                    String cellStr1 = stateMap.get(split[0]);
+                    String cellStr2 = stateMap.get(split[1]);
                     String cell = compute(cellStr1, cellStr2, "a/b");
                     if("NULL".equals(cell)){
                         rowList.add(cell);
@@ -818,13 +818,13 @@ public class WordServiceImpl implements WordService {
                     }
                 }else if (cid.contains("\\")){
                     String[] split = cid.split("\\\\");
-                    String cellStr1 = cityMap.get(split[0]);
-                    String cellStr2 = cityMap.get(split[1]);
+                    String cellStr1 = stateMap.get(split[0]);
+                    String cellStr2 = stateMap.get(split[1]);
                     String cell = compute(cellStr1, cellStr2, "a/b");
                     rowList.add(cell);
                 }else if (cid.contains("%")){
                     String[] split = cid.split("%");
-                    String cell = cityMap.get(split[0]);
+                    String cell = stateMap.get(split[0]);
                     if(StringUtils.isEmpty(cell)||"NULL".equals(cell)){
                         rowList.add(cell);
                     }else {
@@ -832,7 +832,7 @@ public class WordServiceImpl implements WordService {
                         rowList.add(df.format(v));
                     }
                 }else {
-                    String cell = cityMap.get(cid);
+                    String cell = stateMap.get(cid);
                     rowList.add(cell);
                 }
             }
@@ -846,19 +846,19 @@ public class WordServiceImpl implements WordService {
      * @param processBriefs
      * @return
      */
-    private Map<String,Map<String, String>> convertCityResulMap(List<PerformanceBriefInfo> processBriefs,String sFlag,String eFalg) {
-        Map<String,Map<String, String>> cityMap = new HashMap<>();
+    private Map<String,Map<String, String>> convertCityResulMap(List<DataDemo> processBriefs, String sFlag, String eFalg) {
+        Map<String,Map<String, String>> stateMap = new HashMap<>();
 
-        for (String city : citys){
+        for (String state : states){
             Map<String, String> cidMap = new HashMap<>();// cid 与word模板对应 C3...
-            for (PerformanceBriefInfo pInfo:processBriefs) {
+            for (DataDemo pInfo:processBriefs) {
                 Integer id = pInfo.getId();
-                String valueByCity = BriefHandler.getValueByCity(pInfo, city);
+                String valueByCity = BriefHandler.getValueByCity(pInfo, state);
                 cidMap.put(sFlag+id+eFalg,valueByCity);
             }
-            cityMap.put(city,cidMap);
+            stateMap.put(state,cidMap);
         }
-        return cityMap;
+        return stateMap;
     }
 
     private String compute(String s1 ,String s2 ,String flag){
@@ -911,12 +911,12 @@ public class WordServiceImpl implements WordService {
 
     /**
      * 根据全球名 返回word列表的行数
-     * @param city
+     * @param state
      * @return
      */
-    public  String getRowNoByCity(String city) {
-        for (int i = 0; i <citys.length ; i++) {
-            if (citys[i].equals(city)){
+    public  String getRowNoByCity(String state) {
+        for (int i = 0; i <states.length ; i++) {
+            if (states[i].equals(state)){
                 return i+1+"";
             }
         }

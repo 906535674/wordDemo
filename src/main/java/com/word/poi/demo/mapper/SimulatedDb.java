@@ -1,7 +1,7 @@
 package com.word.poi.demo.mapper;
 
-import com.word.poi.demo.pojo.PerformanceBriefInfo;
-import com.word.poi.demo.util.ExportToExcelUtil;
+import com.word.poi.demo.pojo.DataDemo;
+import com.word.poi.demo.util.ExportToExcelUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ public class SimulatedDb {
             "statistical_zq_value","statistical_zs_value","statistical_zh_value","statistical_jm_value","id","statistical_yzz_value",
             "statistical_ydnz_value","statistical_ydbz_value","statistical_yxybz_value"};
 
-    public  List<PerformanceBriefInfo> getSimulatedDb(){
-        List<PerformanceBriefInfo> parseList = new ArrayList<>();
+    public  List<DataDemo> getSimulatedDb(){
+        List<DataDemo> parseList = new ArrayList<>();
         try {
-            ExportToExcelUtil<PerformanceBriefInfo> util = new ExportToExcelUtil<>();
+            ExportToExcelUtils<DataDemo> util = new ExportToExcelUtils<>();
             InputStream in = this.getClass().getResourceAsStream("/templates/simulatedDb.xlsx");
-            parseList =  util.excelParseList(in, PerformanceBriefInfo.class,PERFORMANCEBRIEFINFO,0);
+            parseList =  util.excelParseList(in, DataDemo.class,PERFORMANCEBRIEFINFO,0);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,6 @@
 package com.word.poi.demo.util;
 
-import com.word.poi.demo.pojo.PerformanceBriefInfo;
+import com.word.poi.demo.pojo.DataDemo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DecimalFormat;
@@ -9,9 +9,9 @@ import java.text.DecimalFormat;
 public class BriefHandler {
 
     /*根据名获取统计值*/
-    public static String getValueByCity(PerformanceBriefInfo briefInfo, String city) {
+    public static String getValueByCity(DataDemo briefInfo, String state) {
         String statisticalValue = "";
-        switch (city) {
+        switch (state) {
             case "中国":
                 statisticalValue = briefInfo.getStatistical_cz_value();
                 break;

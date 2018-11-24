@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class ExportToExcelUtil<T> {    
+public class ExportToExcelUtils<T> {
     //每次设置导出数量  
     public static int  NUM=1000;  
     public static String title="";  

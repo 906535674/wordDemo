@@ -1,6 +1,6 @@
 package com.word.poi.demo.pojo;
 
-public class PerformanceBriefInfo {
+public class DataDemo {
 
     private Integer id;
     private String statistics_directory;
@@ -29,10 +29,10 @@ public class PerformanceBriefInfo {
     private String statistical_zs_value;
     private String statistical_zh_value;
     private String statistical_jm_value;
-    private String statistical_yzz_value;//粤中组
-    private String statistical_ydnz_value;//粤东南组
-    private String statistical_ydbz_value;//粤东北组
-    private String statistical_yxybz_value;//粤西粤北组
+    private String statistical_yzz_value;
+    private String statistical_ydnz_value;
+    private String statistical_ydbz_value;
+    private String statistical_yxybz_value;
 
     public String getStatistical_yzz_value() {
         return statistical_yzz_value;
@@ -274,31 +274,31 @@ public class PerformanceBriefInfo {
         this.statistical_jm_value = statistical_jm_value;
     }
 
-    public PerformanceBriefInfo(String statistics_directory, String statistical_term, String statistical_gz_value) {
+    public DataDemo(String statistics_directory, String statistical_term, String statistical_gz_value) {
         this.statistics_directory = statistics_directory;
         this.statistical_term = statistical_term;
         this.statistical_gz_value = statistical_gz_value;
     }
 
-    public PerformanceBriefInfo(Integer id, String statistics_directory, String statistical_term, String statistical_gz_value) {
+    public DataDemo(Integer id, String statistics_directory, String statistical_term, String statistical_gz_value) {
         this.id = id;
         this.statistics_directory = statistics_directory;
         this.statistical_term = statistical_term;
         this.statistical_gz_value = statistical_gz_value;
     }
-    public PerformanceBriefInfo(String statistics_directory, String statistical_term) {
+    public DataDemo(String statistics_directory, String statistical_term) {
         this.statistics_directory = statistics_directory;
         this.statistical_term = statistical_term;
     }
 
-    public PerformanceBriefInfo() {
+    public DataDemo() {
     }
 
-    public PerformanceBriefInfo(Integer id) {
+    public DataDemo(Integer id) {
         this.id = id;
     }
 
-    public PerformanceBriefInfo(Integer id, String statistics_directory, String statistical_term) {
+    public DataDemo(Integer id, String statistics_directory, String statistical_term) {
         this.id = id;
         this.statistics_directory = statistics_directory;
         this.statistical_term = statistical_term;
@@ -306,7 +306,7 @@ public class PerformanceBriefInfo {
 
     @Override
     public String toString() {
-        return "PerformanceBriefInfo{" +
+        return "DataDemo{" +
                 "id='" + id + '\'' +
                 ", statistics_directory='" + statistics_directory + '\'' +
                 ", statistical_term='" + statistical_term + '\'' +
